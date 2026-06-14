@@ -1,7 +1,8 @@
 # Estágio de Build (Compilação)
-FROM maven:3-eclipse-temurin-25 AS build
+FROM eclipse-temurin:25-jdk-jammy AS build
 COPY . .
-RUN mvn clean package -DskipTests
+# Usando o wrapper nativo do projeto com permissão de execução
+RUN chmod +x mvnw && ./mvnw clean package -DskipTests
 
 # Estágio de Execução
 FROM eclipse-temurin:25-jdk-jammy
