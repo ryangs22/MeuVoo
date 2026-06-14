@@ -63,10 +63,10 @@ public class FlightService {
     }
 
     public void populateSampleData() {
-        if (flightRepository.count() > 0) {
-            System.out.println(">>> Banco já contém dados. Pulando população.");
-            return;
-        }
+//        if (flightRepository.count() > 0) {
+//            System.out.println(">>> Banco já contém dados. Pulando população.");
+//            return;
+//        }
 
         Map<String, Integer> distancias = new HashMap<>();
         distancias.put("GRU-GIG", 360);   distancias.put("GRU-REC", 2100);
@@ -150,7 +150,7 @@ public class FlightService {
         Random rand = new Random();
         List<Flight> flights = new ArrayList<>();
 
-        // 🌟 LÓGICA DINÂMICA DE VOLUMETRIA CONFIGURADA PARA 1000 VOOS / 7 DIAS NO RENDER
+        // LÓGICA DINÂMICA DE VOLUMETRIA CONFIGURADA PARA 1000 VOOS / 7 DIAS NO RENDER
         int totalVoos = (System.getenv("RENDER") != null) ? 1000 : 20000;
         int intervaloDias = (System.getenv("RENDER") != null) ? 7 : 60;
 
