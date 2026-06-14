@@ -8,28 +8,37 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     // ---------- MAPEAMENTOS DE CIDADES ----------
-    // cidade -> sigla (para conversão antes da busca)
+// ---------- MAPEAMENTOS DE CIDADES ----------
     const cidadeParaSigla = {
-        'são paulo': 'GRU', 'sao paulo': 'GRU', 'sp': 'GRU', 'guarulhos': 'GRU',
-        'congonhas': 'CGH', 'campinas': 'VCP',
+        'são paulo': 'GRU', 'sao paulo': 'GRU', 'sp': 'GRU', 'guarulhos': 'GRU', 'congonhas': 'CGH', 'campinas': 'VCP',
         'rio de janeiro': 'GIG', 'rio': 'GIG', 'galeão': 'GIG', 'santos dumont': 'SDU',
-        'brasília': 'BSB', 'brasilia': 'BSB',
-        'salvador': 'SSA', 'recife': 'REC', 'fortaleza': 'FOR',
+        'brasília': 'BSB', 'brasilia': 'BSB', 'salvador': 'SSA', 'recife': 'REC', 'fortaleza': 'FOR',
         'belo horizonte': 'CNF', 'confins': 'CNF', 'pampulha': 'PLU',
-        'curitiba': 'CWB', 'porto alegre': 'POA', 'manaus': 'MAO',
+        'curitiba': 'CWB', 'porto alegre': 'POA', 'manaus': 'MAO', 'maceió': 'MCZ', 'maceio': 'MCZ',
+        'florianópolis': 'FLN', 'florianopolis': 'FLN', 'belém': 'BEL', 'belem': 'BEL', 'vitória': 'VIX', 'vitoria': 'VIX',
         'santiago': 'SCL', 'buenos aires': 'EZE', 'miami': 'MIA', 'nova york': 'JFK',
-        'lisboa': 'LIS', 'londres': 'LHR', 'paris': 'CDG', 'lima': 'LIM', 'roma': 'FCO'
+        'lisboa': 'LIS', 'londres': 'LHR', 'paris': 'CDG', 'lima': 'LIM', 'roma': 'FCO', 'madri': 'MAD',
+        'amsterdã': 'AMS', 'amsterda': 'AMS', 'frankfurt': 'FRA', 'milão': 'MXP', 'milao': 'MXP',
+        'zurique': 'ZRH', 'istambul': 'IST', 'viena': 'VIE', 'munique': 'MUC', 'atenas': 'ATH', 'barcelona': 'BCN',
+        'dubai': 'DXB', 'doha': 'DOH', 'tóquio': 'NRT', 'toquio': 'NRT', 'seul': 'ICN', 'singapura': 'SIN',
+        'pequim': 'PEK', 'xangai': 'PVG', 'hong kong': 'HKG', 'bangkok': 'BKK', 'nova delhi': 'DEL',
+        'taipé': 'TPE', 'taipe': 'TPE', 'kuala lumpur': 'KUL'
     };
 
-    // sigla -> cidade (para exibição nos cards)
     const siglaParaCidade = {
         'GRU': 'São Paulo', 'CGH': 'São Paulo (Congonhas)', 'VCP': 'Campinas',
-        'GIG': 'Rio de Janeiro (Galeão)', 'SDU': 'Rio de Janeiro (Santos Dumont)',
-        'BSB': 'Brasília', 'SSA': 'Salvador', 'REC': 'Recife', 'FOR': 'Fortaleza',
-        'CNF': 'Belo Horizonte', 'PLU': 'Belo Horizonte (Pampulha)',
-        'CWB': 'Curitiba', 'POA': 'Porto Alegre', 'MAO': 'Manaus',
-        'SCL': 'Santiago', 'EZE': 'Buenos Aires', 'MIA': 'Miami', 'JFK': 'Nova York',
-        'LIS': 'Lisboa', 'LHR': 'Londres', 'CDG': 'Paris', 'LIM': 'Lima', 'FCO': 'Roma'
+        'GIG': 'Rio de Janeiro', 'SDU': 'Rio de Janeiro', 'BSB': 'Brasília',
+        'SSA': 'Salvador', 'REC': 'Recife', 'FOR': 'Fortaleza', 'CNF': 'Belo Horizonte',
+        'PLU': 'Belo Horizonte', 'CWB': 'Curitiba', 'POA': 'Porto Alegre',
+        'MAO': 'Manaus', 'MCZ': 'Maceió', 'FLN': 'Florianópolis', 'BEL': 'Belém',
+        'VIX': 'Vitória', 'SCL': 'Santiago', 'EZE': 'Buenos Aires', 'MIA': 'Miami',
+        'JFK': 'Nova York', 'LIS': 'Lisboa', 'LHR': 'Londres', 'CDG': 'Paris',
+        'LIM': 'Lima', 'FCO': 'Roma', 'MAD': 'Madri', 'AMS': 'Amsterdã',
+        'FRA': 'Frankfurt', 'MXP': 'Milão', 'ZRH': 'Zurique', 'IST': 'Istambul',
+        'VIE': 'Viena', 'MUC': 'Munique', 'ATH': 'Atenas', 'BCN': 'Barcelona',
+        'DXB': 'Dubai', 'DOH': 'Doha', 'NRT': 'Tóquio', 'ICN': 'Seul',
+        'SIN': 'Singapura', 'PEK': 'Pequim', 'PVG': 'Xangai', 'HKG': 'Hong Kong',
+        'BKK': 'Bangkok', 'DEL': 'Nova Delhi', 'TPE': 'Taipé', 'KUL': 'Kuala Lumpur'
     };
 
     function obterNomeCidade(sigla) {
@@ -369,7 +378,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Erro ao carregar cidades:', error);
         }
     }
-    carregarCidades();
 
     // ---------- INICIALIZAÇÃO ----------
     setMode('route');

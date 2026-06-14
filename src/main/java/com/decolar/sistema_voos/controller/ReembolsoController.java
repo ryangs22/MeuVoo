@@ -6,8 +6,17 @@
  * para determinar o percentual a ser devolvido com base na antecedência do voo.
  */
 
+/*
+ * ReembolsoController.java
+ *
+ * Controller responsável pelo cálculo de reembolso em caso de cancelamento.
+ * Atualizado para receber o ReembolsoResult da pasta DTO.
+ */
+
 package com.decolar.sistema_voos.controller;
 
+// 1. IMPORTANTE: Adicionamos o import para localizar o ReembolsoResult que mudou de pasta
+import com.decolar.sistema_voos.dto.ReembolsoResult;
 import com.decolar.sistema_voos.service.ReembolsoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -34,7 +43,11 @@ public class ReembolsoController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataVoo,
             @RequestParam BigDecimal valorTotal) {
 
-        ReembolsoService.ReembolsoResult result = reembolsoService.calcularReembolso(dataVoo, valorTotal);
+        // =========================================================================
+        // Removemos o "ReembolsoService." antes de ReembolsoResult
+        // =========================================================================
+        ReembolsoResult result = reembolsoService.calcularReembolso(dataVoo, valorTotal);
+
         ReembolsoResponse response = new ReembolsoResponse(
                 result.getValorReembolso(),
                 result.getDescricao(),

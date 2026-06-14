@@ -56,6 +56,23 @@ public class AuthService {
             throw new RuntimeException("CPF já cadastrado.");
         }
 
+        // =========================================================================
+        // PLUG DO ADAPTER DO CPF (RECEITA FEDERAL) AQUI
+        // Validamos o CPF do novo usuário no sistema externo antes de salvar
+        // =========================================================================
+        com.decolar.sistema_voos.adapter.ValidadorDocumento validadorCpf =
+                new com.decolar.sistema_voos.adapter.ReceitaFederalAdapter();
+
+        boolean isCpfValidoNaReceita = validadorCpf.verificarDocumento(request.getCpf());
+
+        if (!isCpfValidoNaReceita) {
+            // Se o adapter retornasse false, nós barraríamos o cadastro aqui
+            throw new RuntimeException("CPF inválido perante a Receita Federal.");
+        }
+
+        System.out.println(">>> [Sistema] CPF verificado e aprovado pelo Adapter da Receita Federal!");
+        // =========================================================================
+
         User user = new User();
         user.setNome(request.getNome());
         user.setEmail(request.getEmail());

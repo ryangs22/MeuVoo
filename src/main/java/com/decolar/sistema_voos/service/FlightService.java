@@ -4,6 +4,7 @@
  * Serviço responsável pela lógica de negócio relacionada a voos.
  * Oferece métodos para busca por rota (com fallback para datas próximas),
  * recomendação por orçamento e população inicial do banco de dados.
+ * PADRÃO CRIACIONAL APLICADO: O DataLoader agora utiliza o FlightBuilder para gerar os dados mockados.
  */
 
 package com.decolar.sistema_voos.service;
@@ -28,10 +29,6 @@ public class FlightService {
     @Autowired
     private FlightRepository flightRepository;
 
-    /**
-     * Busca voos por rota, data, número de passageiros e classe.
-     * Caso não haja resultados na data exata, amplia a busca para ±7 dias.
-     */
     public List<Flight> searchFlights(String from, String to, LocalDate date,
                                       int passengers, FlightClass flightClass) {
         List<Flight> exactFlights = flightRepository.findAvailableFlights(from, to, date, flightClass, passengers);
@@ -46,10 +43,6 @@ public class FlightService {
         return nearbyFlights;
     }
 
-    /**
-     * Recomenda até 3 destinos diferentes a partir de uma origem, respeitando
-     * o orçamento máximo informado e a quantidade de passageiros.
-     */
     public List<Flight> recommendByBudget(String from, BigDecimal maxPrice, int passengers) {
         List<Flight> allFlights = flightRepository.findByFromAndPriceLessThanEqual(from, maxPrice, passengers);
         if (allFlights.isEmpty()) {
@@ -69,10 +62,6 @@ public class FlightService {
         return recommendations.stream().limit(3).collect(Collectors.toList());
     }
 
-    /**
-     * Popula o banco de dados com voos e assentos de exemplo.
-     * Os preços são calculados com base na distância aproximada entre as cidades.
-     */
     public void populateSampleData() {
         if (flightRepository.count() > 0) {
             System.out.println(">>> Banco já contém dados. Pulando população.");
@@ -94,30 +83,74 @@ public class FlightService {
         distancias.put("SCL-LIM", 3300);  distancias.put("LIS-LHR", 1600);
         distancias.put("LHR-CDG", 340);   distancias.put("CDG-FCO", 1100);
 
+        List<String> internacionaisList = Arrays.asList(
+                "SCL", "EZE", "MIA", "JFK", "LIS", "LHR", "CDG", "MAD", "AMS", "FRA", "MXP", "DXB", "DOH", "NRT", "ICN", "SIN",
+                "FCO", "ZRH", "IST", "VIE", "MUC", "ATH", "BCN", "PEK", "PVG", "HKG", "BKK", "DEL", "TPE", "KUL"
+        );
+
+        // Novas listas para categorizar por região e cobrar o preço justo
+        List<String> asiaOriente = Arrays.asList("DXB", "DOH", "NRT", "ICN", "SIN", "PEK", "PVG", "HKG", "BKK", "DEL", "TPE", "KUL");
+        List<String> europa = Arrays.asList("LIS", "LHR", "CDG", "MAD", "AMS", "FRA", "MXP", "FCO", "ZRH", "IST", "VIE", "MUC", "ATH", "BCN");
+        List<String> americaNorte = Arrays.asList("MIA", "JFK");
+        List<String> americaSul = Arrays.asList("SCL", "EZE", "LIM");
+
         java.util.function.BiFunction<String, String, BigDecimal> calcularPrecoBase = (orig, dest) -> {
             String chave1 = orig + "-" + dest;
             String chave2 = dest + "-" + orig;
             Integer distancia = distancias.getOrDefault(chave1, distancias.get(chave2));
-            if (distancia == null) distancia = 1500;
 
-            boolean isInternacional = orig.equals("SCL") || orig.equals("EZE") || orig.equals("MIA") ||
-                    orig.equals("JFK") || orig.equals("LIS") || orig.equals("LHR") ||
-                    orig.equals("CDG") || dest.equals("SCL") || dest.equals("EZE") ||
-                    dest.equals("MIA") || dest.equals("JFK") || dest.equals("LIS") ||
-                    dest.equals("LHR") || dest.equals("CDG");
-            double taxaKm = isInternacional ? 0.35 : 0.25;
-            return BigDecimal.valueOf(150 + distancia * taxaKm);
+            double taxaKm;
+            double tarifaFixa;
+
+            // Se a distância não estiver mapeada, calculamos por região do mundo
+            if (distancia == null) {
+                if (asiaOriente.contains(orig) || asiaOriente.contains(dest)) {
+                    distancia = 13000;
+                    taxaKm = 0.50; // Passagem cara
+                    tarifaFixa = 800.0;
+                } else if (europa.contains(orig) || europa.contains(dest)) {
+                    distancia = 9500;
+                    taxaKm = 0.45;
+                    tarifaFixa = 500.0;
+                } else if (americaNorte.contains(orig) || americaNorte.contains(dest)) {
+                    distancia = 7000;
+                    taxaKm = 0.40;
+                    tarifaFixa = 400.0;
+                } else if (americaSul.contains(orig) || americaSul.contains(dest)) {
+                    distancia = 3000;
+                    taxaKm = 0.35;
+                    tarifaFixa = 250.0;
+                } else {
+                    distancia = 2000; // Nacional genérico
+                    taxaKm = 0.25;
+                    tarifaFixa = 100.0;
+                }
+            } else {
+                // Se encontrou a distância exata no mapa inicial
+                boolean isInternacional = internacionaisList.contains(orig) || internacionaisList.contains(dest);
+                taxaKm = isInternacional ? 0.35 : 0.25;
+                tarifaFixa = isInternacional ? 300.0 : 100.0;
+            }
+
+            return BigDecimal.valueOf(tarifaFixa + (distancia * taxaKm));
         };
 
-        String[] origens = {"GRU", "CGH", "BSB", "GIG", "SDU", "REC", "SSA", "CNF", "POA", "CWB", "FOR", "MAO"};
-        String[] destinos = {"GRU", "CGH", "BSB", "GIG", "SDU", "REC", "SSA", "CNF", "POA", "CWB", "FOR", "MAO",
-                "SCL", "EZE", "MIA", "JFK", "LIS", "LHR", "CDG"};
-        String[] companhias = {"LATAM", "GOL", "AZUL", "American", "Delta", "United", "Air France", "TAP", "Iberia", "British Airways"};
+        // Arrays de origens e destinos super populados
+        String[] origens = {"GRU", "CGH", "BSB", "GIG", "SDU", "REC", "SSA", "CNF", "POA", "CWB", "FOR", "MAO", "MCZ", "FLN", "BEL", "VIX",
+                "SCL", "EZE", "MIA", "JFK", "LIS", "LHR", "CDG", "MAD", "AMS", "FRA", "MXP", "DXB", "DOH", "NRT", "ICN", "SIN",
+                "FCO", "ZRH", "IST", "VIE", "MUC", "ATH", "BCN", "PEK", "PVG", "HKG", "BKK", "DEL", "TPE", "KUL"};
+
+        String[] destinos = {"GRU", "CGH", "BSB", "GIG", "SDU", "REC", "SSA", "CNF", "POA", "CWB", "FOR", "MAO", "MCZ", "FLN", "BEL", "VIX",
+                "SCL", "EZE", "MIA", "JFK", "LIS", "LHR", "CDG", "MAD", "AMS", "FRA", "MXP", "DXB", "DOH", "NRT", "ICN", "SIN",
+                "FCO", "ZRH", "IST", "VIE", "MUC", "ATH", "BCN", "PEK", "PVG", "HKG", "BKK", "DEL", "TPE", "KUL"};
+
+        String[] companhias = {"LATAM", "GOL", "AZUL", "American", "Delta", "United", "Air France", "TAP", "Iberia", "British Airways", "Emirates", "Qatar Airways", "Lufthansa", "Turkish Airlines", "Singapore Airlines", "Cathay Pacific", "ANA", "ITA Airways"};
+
         FlightClass[] classes = {FlightClass.ECONOMICA, FlightClass.EXECUTIVA};
         Random rand = new Random();
         List<Flight> flights = new ArrayList<>();
 
-        int totalVoos = 5000;
+        int totalVoos = 20000;
         for (int i = 0; i < totalVoos; i++) {
             String origem = origens[rand.nextInt(origens.length)];
             String destino;
@@ -134,24 +167,31 @@ public class FlightService {
             double variacao = 0.85 + (rand.nextDouble() * 0.3);
             BigDecimal precoFinal = precoBase.multiply(BigDecimal.valueOf(variacao))
                     .setScale(2, java.math.RoundingMode.HALF_UP);
+
+            // Multiplicador da classe Executiva
             if (classe == FlightClass.EXECUTIVA) {
                 precoFinal = precoFinal.multiply(BigDecimal.valueOf(2.5))
                         .setScale(2, java.math.RoundingMode.HALF_UP);
             }
 
             int assentos = 20 + rand.nextInt(180);
-
             String id = cia.substring(0, Math.min(2, cia.length())).toUpperCase() + String.format("%05d", i);
-            Flight voo = new Flight();
-            voo.setId(id);
-            voo.setFrom(origem);
-            voo.setTo(destino);
-            voo.setDate(data);
-            voo.setDeparture(partida);
-            voo.setAirline(cia);
-            voo.setPrice(precoFinal);
-            voo.setFlightClass(classe);
-            voo.setAvailableSeats(assentos);
+
+            // ===============================================================
+            // APLICAÇÃO DO PADRÃO BUILDER AQUI
+            // Substituímos os "setters" por uma construção fluída e blindada
+            // ===============================================================
+            Flight voo = new Flight.FlightBuilder()
+                    .id(id)
+                    .from(origem)
+                    .to(destino)
+                    .date(data)
+                    .departure(partida)
+                    .airline(cia)
+                    .price(precoFinal)
+                    .flightClass(classe)
+                    .availableSeats(assentos)
+                    .build();
 
             int totalAssentos = assentos;
             for (int j = 0; j < totalAssentos; j++) {
@@ -170,6 +210,6 @@ public class FlightService {
         }
 
         flightRepository.saveAll(flights);
-        System.out.println(">>> " + flights.size() + " voos gerados com sucesso!");
+        System.out.println(">>> " + flights.size() + " voos gerados com sucesso utilizando o Padrão Builder e Nova Precificação!");
     }
 }

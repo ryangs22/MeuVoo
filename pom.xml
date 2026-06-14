@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-    pom.xml
-    Arquivo de configuração do Maven para o projeto MeuVoo.
-    Define as dependências do Spring Boot, H2, JPA e o plugin de build.
--->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- ========== PROJETO PAI (SPRING BOOT) ========== -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -18,47 +12,35 @@
         <relativePath/>
     </parent>
 
-    <!-- ========== IDENTIFICAÇÃO DO PROJETO ========== -->
     <groupId>com.decolar</groupId>
     <artifactId>sistema-voos</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>sistema-voos</name>
     <description>Sistema de passagens aéreas MeuVoo</description>
 
-    <!-- ========== PROPRIEDADES ========== -->
     <properties>
         <java.version>25</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <!-- ========== DEPENDÊNCIAS ========== -->
     <dependencies>
-        <!-- Console H2 para desenvolvimento -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-h2console</artifactId>
-        </dependency>
 
-        <!-- Spring Data JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- Spring Web MVC -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc</artifactId>
         </dependency>
 
-        <!-- Banco de dados H2 -->
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Dependências para testes -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa-test</artifactId>
@@ -71,7 +53,6 @@
         </dependency>
     </dependencies>
 
-    <!-- ========== CONFIGURAÇÃO DE BUILD ========== -->
     <build>
         <plugins>
             <plugin>

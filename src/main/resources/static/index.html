@@ -10,6 +10,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MeuVoo · Passagens aéreas</title>
+
+    <!-- Favicon - Ícone do site (foot.png da pasta Public/Favicon) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="Public/Favicon/foot.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="Public/Favicon/foot.png">
+    <link rel="shortcut icon" type="image/png" href="Public/Favicon/foot.png">
+    <link rel="apple-touch-icon" type="image/png" href="Public/Favicon/foot.png">
+
     <link rel="stylesheet" href="Public/Styles/index.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
 </head>
@@ -144,26 +151,53 @@
 
                 <!-- Datalist com as cidades existentes no backend -->
                 <datalist id="cidadesList">
-                    <!-- Nacionais -->
-                    <option value="São Paulo">GRU</option>
-                    <option value="São Paulo (Congonhas)">CGH</option>
-                    <option value="Brasília">BSB</option>
+                    <option value="São Paulo">GRU / CGH / VCP</option>
                     <option value="Rio de Janeiro">GIG / SDU</option>
+                    <option value="Brasília">BSB</option>
                     <option value="Salvador">SSA</option>
                     <option value="Recife">REC</option>
                     <option value="Fortaleza">FOR</option>
-                    <option value="Belo Horizonte">CNF</option>
+                    <option value="Belo Horizonte">CNF / PLU</option>
                     <option value="Curitiba">CWB</option>
                     <option value="Porto Alegre">POA</option>
                     <option value="Manaus">MAO</option>
-                    <!-- Internacionais -->
+                    <option value="Maceió">MCZ</option>
+                    <option value="Florianópolis">FLN</option>
+                    <option value="Belém">BEL</option>
+                    <option value="Vitória">VIX</option>
+
                     <option value="Santiago">SCL</option>
                     <option value="Buenos Aires">EZE</option>
                     <option value="Miami">MIA</option>
                     <option value="Nova York">JFK</option>
+
                     <option value="Lisboa">LIS</option>
                     <option value="Londres">LHR</option>
                     <option value="Paris">CDG</option>
+                    <option value="Madri">MAD</option>
+                    <option value="Amsterdã">AMS</option>
+                    <option value="Frankfurt">FRA</option>
+                    <option value="Milão">MXP</option>
+                    <option value="Roma">FCO</option>
+                    <option value="Zurique">ZRH</option>
+                    <option value="Istambul">IST</option>
+                    <option value="Viena">VIE</option>
+                    <option value="Munique">MUC</option>
+                    <option value="Atenas">ATH</option>
+                    <option value="Barcelona">BCN</option>
+
+                    <option value="Dubai">DXB</option>
+                    <option value="Doha">DOH</option>
+                    <option value="Tóquio">NRT</option>
+                    <option value="Seul">ICN</option>
+                    <option value="Singapura">SIN</option>
+                    <option value="Pequim">PEK</option>
+                    <option value="Xangai">PVG</option>
+                    <option value="Hong Kong">HKG</option>
+                    <option value="Bangkok">BKK</option>
+                    <option value="Nova Delhi">DEL</option>
+                    <option value="Taipé">TPE</option>
+                    <option value="Kuala Lumpur">KUL</option>
                 </datalist>
 
                 <div id="resultadosBusca" class="resultados-busca" style="display: none;">

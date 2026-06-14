@@ -2,12 +2,13 @@
  * ReembolsoService.java
  *
  * Serviço responsável pelo cálculo de reembolso em caso de cancelamento.
- * Utiliza uma hierarquia de políticas de cancelamento (herança e polimorfismo)
- * para determinar o percentual a ser devolvido com base na antecedência do voo.
+ * Agora utiliza o padrão TEMPLATE METHOD delegado na hierarquia de CancelPolicy.
  */
 
 package com.decolar.sistema_voos.service;
 
+// 1. IMPORTANTE: Nova importação do DTO que criamos na pasta dto
+import com.decolar.sistema_voos.dto.ReembolsoResult;
 import com.decolar.sistema_voos.policy.*;
 import org.springframework.stereotype.Service;
 
@@ -40,31 +41,33 @@ public class ReembolsoService {
 
     /**
      * Calcula o valor do reembolso aplicando a política determinada.
-     * POLIMORFISMO: chama métodos da superclasse que são executados pela subclasse concreta.
+     * TEMPLATE METHOD: Delega a execução para a "receita de bolo" definida em CancelPolicy.
      */
     public ReembolsoResult calcularReembolso(LocalDate dataVoo, BigDecimal valorTotal) {
         CancelPolicy politica = determinarPolitica(dataVoo);
-        BigDecimal percentual = politica.getPercentualReembolso();
-        BigDecimal valorReembolso = valorTotal.multiply(percentual);
-        return new ReembolsoResult(valorReembolso, politica.getDescricao(), percentual);
-    }
 
-    /**
-     * Classe interna para encapsular o resultado do cálculo de reembolso.
-     */
-    public static class ReembolsoResult {
-        private final BigDecimal valorReembolso;
-        private final String descricao;
-        private final BigDecimal percentual;
+        // Executa a regra do Template Method para obter o cálculo
+        ReembolsoResult resultado = politica.processarCancelamento(valorTotal);
 
-        public ReembolsoResult(BigDecimal valorReembolso, String descricao, BigDecimal percentual) {
-            this.valorReembolso = valorReembolso;
-            this.descricao = descricao;
-            this.percentual = percentual;
+        // =========================================================================
+        // PLUG DO ADAPTER DE REEMBOLSO (BANCO LEGADO) AQUI
+        // Se o cálculo resultou em algum valor maior que zero para devolver,
+        // nós acionamos o adaptador para fingir a transferência bancária externa.
+        // =========================================================================
+        if (resultado.getValorReembolso() != null && resultado.getValorReembolso().compareTo(BigDecimal.ZERO) > 0) {
+
+            com.decolar.sistema_voos.adapter.ProvedorPagamento provedorBancario =
+                    new com.decolar.sistema_voos.adapter.BancoLegadoAdapter();
+
+            // Simula uma conta corrente fictícia de destino do passageiro
+            String contaClienteFicticia = "CC-99432-8";
+
+            // O adaptador faz a mágica de traduzir e enviar para o banco legado
+            provedorBancario.enviarEstorno(resultado.getValorReembolso(), contaClienteFicticia);
         }
 
-        public BigDecimal getValorReembolso() { return valorReembolso; }
-        public String getDescricao() { return descricao; }
-        public BigDecimal getPercentual() { return percentual; }
+        return resultado;
     }
+    // A antiga classe interna 'static class ReembolsoResult' FOI REMOVIDA daqui,
+    // pois agora ela é um arquivo separado dentro da pasta 'dto'.
 }
