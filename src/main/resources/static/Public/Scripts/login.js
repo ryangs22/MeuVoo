@@ -14,9 +14,13 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const password = document.getElementById('password').value;
     const mensagemDiv = document.getElementById('mensagem');
 
+    const urlLogin = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:8080/api/auth/login'
+        : '/api/auth/login';
+
     // ---------- ENVIO DA REQUISIÇÃO PARA O BACKEND ----------
     try {
-        const response = await fetch('http://localhost:8080/api/auth/login', {
+        const response = await fetch(urlLogin, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })

@@ -23,9 +23,14 @@ document.getElementById('cadastroForm').addEventListener('submit', async (e) => 
         return;
     }
 
+    // ALTERAÇÃO AQUI: Endpoint dinâmico para rodar localmente ou no Render automaticamente
+    const urlCadastro = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:8080/api/auth/register'
+        : '/api/auth/register';
+
     // ---------- ENVIO DA REQUISIÇÃO PARA O BACKEND ----------
     try {
-        const response = await fetch('http://localhost:8080/api/auth/register', {
+        const response = await fetch(urlCadastro, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nome, email, cpf, password })

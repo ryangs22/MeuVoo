@@ -8,7 +8,10 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
     // ---------- CONFIGURAÇÕES INICIAIS ----------
-    const API_BASE = 'http://localhost:8080/api';
+    // ALTERAÇÃO AQUI: URL Dinâmica para funcionar localmente e no Render de forma automática
+    const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:8080/api'
+        : '/api';
 
     // ---------- OBTENÇÃO DO ITEM DO CARRINHO ----------
     const urlParams = new URLSearchParams(window.location.search);

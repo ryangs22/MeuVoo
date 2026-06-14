@@ -60,9 +60,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         Valor total pago: ${reserva.totalPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
     `;
 
+    // ALTERAÇÃO AQUI: Base URL dinâmica para o cálculo do reembolso (Local vs Render)
+    const baseUrlReembolso = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:8080'
+        : '';
+
     // ---------- CONSULTA À API DE REEMBOLSO (POLIMORFISMO NO BACKEND) ----------
     try {
-        const response = await fetch(`http://localhost:8080/api/reembolso/calcular?dataVoo=${reserva.date}&valorTotal=${reserva.totalPrice}`);
+        const response = await fetch(`${baseUrlReembolso}/api/reembolso/calcular?dataVoo=${reserva.date}&valorTotal=${reserva.totalPrice}`);
         if (!response.ok) throw new Error('Erro ao calcular reembolso');
         const data = await response.json();
 
