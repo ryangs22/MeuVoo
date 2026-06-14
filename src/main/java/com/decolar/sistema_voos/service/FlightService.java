@@ -150,7 +150,10 @@ public class FlightService {
         Random rand = new Random();
         List<Flight> flights = new ArrayList<>();
 
-        int totalVoos = 20000;
+        // 🌟 LÓGICA DINÂMICA DE VOLUMETRIA CONFIGURADA PARA 1000 VOOS / 7 DIAS NO RENDER
+        int totalVoos = (System.getenv("RENDER") != null) ? 1000 : 20000;
+        int intervaloDias = (System.getenv("RENDER") != null) ? 7 : 60;
+
         for (int i = 0; i < totalVoos; i++) {
             String origem = origens[rand.nextInt(origens.length)];
             String destino;
@@ -158,7 +161,8 @@ public class FlightService {
                 destino = destinos[rand.nextInt(destinos.length)];
             } while (destino.equals(origem));
 
-            LocalDate data = LocalDate.now().plusDays(rand.nextInt(60) + 1);
+            // Gera as datas dentro do limite estipulado (7 dias para a nuvem)
+            LocalDate data = LocalDate.now().plusDays(rand.nextInt(intervaloDias));
             LocalTime partida = LocalTime.of(rand.nextInt(24), rand.nextInt(12) * 5);
             String cia = companhias[rand.nextInt(companhias.length)];
             FlightClass classe = classes[rand.nextInt(classes.length)];
