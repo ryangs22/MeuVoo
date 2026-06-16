@@ -1,13 +1,15 @@
 # ✈️ MeuVoo – Sistema de Passagens Aéreas
 
 Sistema completo para busca, reserva e gestão de passagens aéreas, desenvolvido como projeto da disciplina de **Projeto de Software**.
+Site: https://meuvoo.onrender.com/
 
 ## 🛠️ Tecnologias Utilizadas
 
 - **Backend:** Java 25 + Spring Boot 3 + Spring Data JPA
-- **Banco de Dados:** H2 (em memória)
+- **Banco de Dados:** PostgreSQL
 - **Frontend:** HTML5, CSS3, JavaScript (ES6) puro
 - **Gerenciador de dependências:** Maven (wrapper incluso)
+- **Deploy:** Render
 
 ## 📋 Pré‑requisitos
 
@@ -46,16 +48,6 @@ A maneira mais simples é abrir o projeto no **IntelliJ IDEA**.
 ### 🔹 Acesso Manual
 
 Caso o navegador não abra automaticamente, navegue até `src\main\resources\static\index.html`, clique o o "botão direito" e selecione `Open in: Browser` (Google Chrome recomendado)
-
-## 📌 Observações Importantes
-
-- O banco de dados é **volátil** (H2 em memória). Os dados são perdidos ao parar o backend.
-- A cada reinicialização do backend, **5000 voos de exemplo** são gerados automaticamente.
-- O console do H2 pode ser acessado em: `http://localhost:8080/h2-console`  
-  - **JDBC URL:** `jdbc:h2:mem:testdb`
-  - **Usuário:** `sa`
-  - **Senha:** (vazio)
-- Certifique-se de que a porta `8080` esteja livre antes de iniciar o backend.
 
 ## ✨ Funcionalidades Implementadas
 
