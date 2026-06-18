@@ -55,7 +55,7 @@ Caso o navegador não abra automaticamente, navegue até `src\main\resources\sta
 1. **Busca de Voos por Rota** – Pesquisa de passagens informando origem, destino e data, com fallback automático para datas próximas quando não há resultados exatos.
 2. **Busca por Orçamento** – Ferramenta de recomendação onde o usuário informa apenas o valor máximo que deseja gastar e o sistema sugere até três destinos diferentes.
 3. **Autenticação e Perfil de Usuário** – Cadastro e login com validação de e‑mail, CPF e senha com hash SHA‑256. A sessão é gerenciada dinamicamente no cabeçalho.
-4. **Carrinho de Compras** – Adição de múltiplos voos com cálculo automático do total, incluindo taxas. Os itens são persistidos no navegador via `localStorage`.
+4. **Carrinho de Compras** – Adição de múltiplos voos com cálculo automático do total, incluindo taxas.
 5. **Seleção de Assentos** – Mapa visual interativo das poltronas do avião, com escolha individual por passageiro e verificação de disponibilidade.
 6. **Gestão de Bagagens** – Adição de franquias de 15kg e 23kg por passageiro, com recálculo instantâneo do preço final da reserva.
 7. **Solicitações Especiais** – Registro de necessidades de acessibilidade e restrições alimentares para cada passageiro.
@@ -100,6 +100,9 @@ O projeto foi estruturado para demonstrar de forma clara e aplicada os quatro pi
 - **Problema:** O sistema de Voos precisa 'dialogar' com sistemas externos, como o de validação do CPF (sistema do governo) e o de processamento do reembolso (banco monetário). Como ambos utilizam interfaces antigas, as APIs exigem um certo formato de String definida para verificação e aprovação dos dados. Assim, se eu colocasse uma formatação errada de String dentro do `AuthService` ou do `ReembolsoService`, haveria incommpatibilidade entre as estruturas pré-definidas.
 - **Criação do Padrão:** Dentro da pasta `Adapter`, criamos 2 interfaces (uma para o Validador de CPF e outra para o Banco: `ValidadorDocumento` e `ProvedorPagamento`). Ambas injetam as APIs, tratam os dados formatando para o estilo esperado (tradução) e com isso chamamos os sistemas deles.
 - **Onde é chamado:** Dentro do `AuthService` (para validar o CPF) e `reembolsoService` (adaptador de pagamentos).
+
+### Relatório:
+- O relatório contendo as 10 avaliações reais a respeito do site estão dentro dentro da pasta `relatorio`
 
 ## 📞 Suporte
 
