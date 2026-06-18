@@ -102,7 +102,7 @@ O projeto foi estruturado para demonstrar de forma clara e aplicada os quatro pi
 - **Onde é chamado:** Dentro do `AuthService` (para validar o CPF) e `reembolsoService` (adaptador de pagamentos).
 
 ### Relatório:
-- O relatório contendo as 10 avaliações reais a respeito do site estão dentro dentro da pasta `relatorio`
+- O relatório contendo as 10 avaliações reais a respeito do site estão no arquivo `RELATÓRIO PROJETO DE SOFTWARE.pdf`
 
 ## 📞 Suporte
 
